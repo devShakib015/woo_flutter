@@ -6,7 +6,7 @@ Woocommerce SDK for Flutter.
 Add the package to your pubspec.yaml and import.
 
 ```dart
-import 'package:flutter_woocommerce/woocommerce.dart';
+import 'package:flutter_wp_woocommerce/woocommerce.dart';
 ```
 Create an instance of WooCommerce for your project.
 #### Example:
