@@ -1002,7 +1002,35 @@ class WooCommerce {
   /// Related endpoint : wc/store/cart
   ///
 
-  Future<WooCartItem> addToMyCart(
+  // Future<WooCartItem> addToMyCart(
+  //     {required String itemId,
+  //     required String quantity,
+  //     List<WooProductVariation>? variations}) async {
+  //   Map<String, dynamic> data = {
+  //     'id': itemId,
+  //     'quantity': quantity,
+  //   };
+  //   if (variations != null) data['variations'] = variations;
+  //   await getAuthTokenFromDb();
+  //   _urlHeader['Authorization'] = 'Bearer ' + _authToken!;
+  //   final response = await http.post(
+  //       Uri.parse(this.baseUrl + URL_STORE_API_PATH + 'cart/items'),
+  //       headers: _urlHeader,
+  //       body: data);
+
+  //   if (response.statusCode >= 200 && response.statusCode < 300) {
+  //     final jsonStr = json.decode(response.body);
+
+  //     _printToLog('added to my cart : ' + jsonStr.toString());
+  //     return WooCartItem.fromJson(jsonStr);
+  //   } else {
+  //     WooCommerceError err =
+  //         WooCommerceError.fromJson(json.decode(response.body));
+  //     throw err;
+  //   }
+  // }
+
+  Future addToMyCart(
       {required String itemId,
       required String quantity,
       List<WooProductVariation>? variations}) async {
@@ -1013,8 +1041,14 @@ class WooCommerce {
     if (variations != null) data['variations'] = variations;
     await getAuthTokenFromDb();
     _urlHeader['Authorization'] = 'Bearer ' + _authToken!;
+    final responseGet = await http.get(
+        Uri.parse(this.baseUrl + URL_STORE_API_PATH + 'cart'),
+        headers: _urlHeader);
+    _printToLog('${responseGet.headers['x-wc-store-api-nonce']}');
+    _urlHeader['x-wc-store-api-nonce'] =
+        '${responseGet.headers['x-wc-store-api-nonce']}';
     final response = await http.post(
-        Uri.parse(this.baseUrl + URL_STORE_API_PATH + 'cart/items'),
+        Uri.parse(this.baseUrl + URL_STORE_API_PATH + 'v1/cart/add-item'),
         headers: _urlHeader,
         body: data);
 
